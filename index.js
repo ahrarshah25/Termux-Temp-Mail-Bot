@@ -18,7 +18,7 @@ console.log("========================\n");
 async function loadInbox() {
   try {
     const inboxURL = `https://www.1secmail.com/api/v1/?action=getMessages&login=${login}&domain=${domain}`;
-    const res = await fetch(inboxURL);
+    const res = await fetch(inboxURL, { headers: { "User-Agent": "Mozilla/5.0" } });
     const mails = await res.json();
 
     console.clear();
@@ -37,10 +37,10 @@ async function loadInbox() {
         console.log("------------------------");
 
         const readURL = `https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=${mail.id}`;
-        const msgRes = await fetch(readURL);
+        const msgRes = await fetch(readURL, { headers: { "User-Agent": "Mozilla/5.0" } });
         const msg = await msgRes.json();
 
-        console.log(msg.textBody || msg.htmlBody);
+        console.log(msg.textBody || msg.htmlBody || "[No Content]");
         console.log("========================\n");
       }
     }
@@ -49,5 +49,7 @@ async function loadInbox() {
   }
 }
 
+// First load
+loadInbox();
 // Auto refresh every 5 seconds
 setInterval(loadInbox, 5000);
